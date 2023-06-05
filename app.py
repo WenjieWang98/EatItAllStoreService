@@ -43,7 +43,7 @@ class GetAllStores(Resource):
         for s in stores:
             data = {"store_id": s.store_id, "store_name": s.store_name, "store_address": s.store_address,
                     "price": s.price, "package_left": s.package_left, "is_active": s.is_active,
-                    "pick_up_time": s.pick_up_time}
+                    "pick_up_time": s.pick_up_time, "data": s.data}
             store_list.append(data)
         return {"code": 200, "Stores": store_list}
 
@@ -69,7 +69,7 @@ class DeleteStore(Resource):
 
     def post(self):
         if request.is_json:
-            store = Store.query.get(id)
+            store = Store.query.get(request.json["store_id"])
             if store is None:
                 return {"code": 404, 'error': 'store not found'}
             else:

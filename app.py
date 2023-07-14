@@ -65,6 +65,32 @@ class AddStore(Resource):
             return {"code": 400, "error": "Request is not in Json format"}
 
 
+class UpdateStore(Resource):
+
+    def post(self):
+        if request.is_json:
+            store = Store.query.get(request.json["store_id"])
+            if store is None:
+                return {"code": 404, 'error': 'store not found'}
+            else:
+                if "store_name" in request.json:
+                    store.store_name = request.json["store_name"]
+                if "store_address" in request.json:
+                    store.store_address = request.json["store_address"]
+                if "price" in request.json:
+                    store.price = request.json["price"]
+                if "package_left" in request.json:
+                    store.package_left = request.json["package_left"]
+                if "pick_up_time" in request.json:
+                    store.pick_up_time = request.json["pick_up_time"]
+                if "data" in request.json:
+                    store.data = request.json["data"]
+                db.session.commit()
+                return {"code": 200, "message": "Updated"}
+        else:
+            return {"code": 400, "error": "Request is not in Json format"}
+
+
 class DeleteStore(Resource):
 
     def post(self):
@@ -83,6 +109,7 @@ class DeleteStore(Resource):
 api.add_resource(GetAllStores, '/get_stores')
 api.add_resource(GetStore, '/get_stores/<int:id>')
 api.add_resource(AddStore, '/add_store')
+api.add_resource(UpdateStore, '/update_store')
 api.add_resource(DeleteStore, '/delete_store')
 
 # driver function
